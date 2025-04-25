@@ -21,6 +21,12 @@ if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     exit 1
 }
 
+# Verifica se o Winget está instalado
+if (-NOT (Get-Command winget -ErrorAction SilentlyContinue)) {
+    Write-Host "Winget não está instalado. Instale o App Installer da Microsoft via Microsoft Store e tente novamente." -ForegroundColor Red
+    exit 1
+}
+
 # Função para exibir menu interativo
 function Show-Menu {
     param (
@@ -51,17 +57,22 @@ function Install-WingetPackage {
         [string]$packageName
     )
     
+    Write-Host "`nVerificando a instalação de $packageName..." -ForegroundColor Yellow
+    
     if (winget list --id $packageId -e) {
         Write-Host "[✓] $packageName já instalado" -ForegroundColor Green
         return $true
     } else {
-        Write-Host "[ ] Instalando $packageName..." -ForegroundColor Yellow -NoNewline
+        Write-Host "[ ] Instalando $packageName..." -ForegroundColor Yellow
+        
         try {
-            winget install --id $packageId -e --accept-package-agreements --accept-source-agreements | Out-Null
-            Write-Host "`r[✓] $packageName instalado com sucesso" -ForegroundColor Green
+            # Sem o Out-Null para ver os detalhes
+            winget install --id $packageId -e --accept-package-agreements --accept-source-agreements
+            Write-Host "[✓] $packageName instalado com sucesso" -ForegroundColor Green
             return $true
         } catch {
-            Write-Host "`r[×] Falha ao instalar $packageName" -ForegroundColor Red
+            Write-Host "[×] Falha ao instalar $packageName" -ForegroundColor Red
+            Write-Host "Erro: $_" -ForegroundColor Red
             return $false
         }
     }
@@ -212,7 +223,8 @@ if ($selection -eq 'S') {
     # Resumo final
     Write-Host "`n=== RESUMO DA INSTALAÇÃO ===" -ForegroundColor Cyan
     Write-Host "Pacotes instalados com sucesso: $totalSuccess" -ForegroundColor Green
-    Write-Host "Pacotes com falha: $totalFailed" -ForegroundColor ($totalFailed -gt 0 ? 'Red' : 'Green')
+    $color = if ($totalFailed -gt 0) { 'Red' } else { 'Green' }
+    Write-Host "Pacotes com falha: $totalFailed" -ForegroundColor $color
     
     # Recomendações finais
     Write-Host "`n=== RECOMENDAÇÕES ===" -ForegroundColor Yellow
