@@ -104,7 +104,7 @@ $menuOptions = @(
     @{ 
         Name = "Backend - .NET"; 
         Description = ".NET 8 SDK, Runtime"; 
-        Selected = $false;
+        Selected = $true;
         Packages = @(
             "Microsoft.dotnet.SDK.8",
             "Microsoft.dotnet.Runtime.8"
