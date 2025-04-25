@@ -48,7 +48,7 @@ VS Code, IntelliJ IDEA (Community)
 # Execute como Administrador
 
     Set-ExecutionPolicy Bypass -Scope Process -Force
-    .\install.ps1
+    .\setup.ps1
 ----------
 
 ## 🔍  **Recursos Avançados**
