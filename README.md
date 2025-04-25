@@ -98,6 +98,6 @@ Clone o repositório e execute:
 
     git clone https://github.com/LucaoCorrea/dev-setup.git
     cd dev-setup
-    .\install.ps1
+    .\setup.ps1
 
 **Problemas?**  Abra uma  [issue](https://github.com/LucaoCorrea/dev-setup/issues)  no GitHub!
